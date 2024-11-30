@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV File</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: linear-gradient(135deg, #eceaef, #07b2e6);
+            color: black;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: black;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+
+</head>
+
+    <!-- Button to trigger the modal -->
+<div class="container mt-5 text-center">
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#guidelinesModal">
+        View Dataset Upload Guidelines
+    </button>
+</div>
+
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="guidelinesModal" tabindex="-1" aria-labelledby="guidelinesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="guidelinesModalLabel">Dataset Upload Guidelines</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="description">
+                        When uploading a dataset, it is essential to ensure the file includes the required columns for accurate processing and analysis. These columns are:
+                    </p>
+                    <ul class="list-group mt-3">
+                        <li class="list-group-item">
+                            <b>label</b>: Specifies the classification or category of the data (e.g., normal, threat).
+                        </li>
+                        <li class="list-group-item">
+                            <b>feature1 & feature2</b>: Quantitative or qualitative features contributing to the analysis.
+                        </li>
+                        <li class="list-group-item">
+                            <b>threat_score</b>: A numerical representation of the risk level associated with the data.
+                        </li>
+                        <li class="list-group-item">
+                            <b>connection_type</b>: Describes the type of connection (e.g., TCP, UDP).
+                        </li>
+                        <li class="list-group-item">
+                            <b>packets</b>: Represents the number of packets transmitted or received.
+                        </li>
+                        <li class="list-group-item">
+                            <b>num_connections</b>: Indicates the total connections made during the session.
+                        </li>
+                        <li class="list-group-item">
+                            <b>packet_size</b>: The average size of data packets in bytes.
+                        </li>
+                        <li class="list-group-item">
+                            <b>response_time</b>: Measures the time taken for a response in milliseconds.
+                        </li>
+                        <li class="list-group-item">
+                            <b>value</b>: A general-purpose field capturing additional metrics.
+                        </li>
+                    </ul>
+                    <p class="mt-3">
+                        Ensure the uploaded file is in CSV format with these columns to maintain compatibility and enable seamless data analysis.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Display Flash Messages -->
+ {% with messages = get_flashed_messages(with_categories=true) %}
+ {% if messages %}
+     <ul>
+     {% for category, message in messages %}
+         <li class="{{ category }}">{{ message }}</li>
+     {% endfor %}
+     </ul>
+ {% endif %}
+{% endwith %}
+
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Upload CSV File</h2>
+        <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data" class="mt-4">
+            <div class="mb-3">
+                <label for="file" class="form-label">Select CSV File:</label>
+                <input type="file" name="file" id="file" class="form-control" accept=".csv" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="mt-4">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+    {% if error_message %}
+
+    
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="errorModalLabel">Dataset Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ error_message }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Automatically show the error modal if there's an error message
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorModal.show();
+    });
+</script>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & Cloud Infrastructure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f4f8fb, #e3efff);
+            color: #2c3e50;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4CAF50, #2d863d);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 20px 30px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #4CAF50;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            border-left: 5px solid #4CAF50;
+            padding-left: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+
+        ul li:last-child {
+            border: none;
+        }
+
+        ul li::before {
+            content: '✔';
+            color: #4CAF50;
+            margin-right: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            text-align: left;
+            padding: 15px;
+            border: 1px solid #f1f1f1;
+            font-size: 1.1em;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #4CAF50, #2d863d);
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .highlight {
+            font-size: 1.2em;
+            background-color: #e8f5e9;
+            padding: 15px 20px;
+            border-left: 5px solid #4CAF50;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        @media screen and (max-width: 768px) {
+            table {
+                font-size: 0.9em;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>AI & Cloud Infrastructure Overview</h1>
+</header>
+
+<div class="container">
+    <!-- Quick Overview Section -->
+    <div class="section">
+        <h2>Quick Overview</h2>
+        <p class="highlight">
+            Advanced AI-powered system integrating quantum computing, machine learning, and cybersecurity insights with interactive visualizations to detect anomalies, predict trends, and ensure real-time threat monitoring.
+        </p>
+    </div>
+
+    <!-- Need for Cloud Infrastructure Section -->
+    <div class="section">
+        <h2>Why Cloud Infrastructure?</h2>
+        <ul>
+            <li><strong>Scale:</strong> Handle high volumes of real-time data (e.g., network traffic, satellite telemetry).</li>
+            <li><strong>Compute Power:</strong> Execute ML and quantum models requiring high-performance GPUs/TPUs.</li>
+            <li><strong>Real-Time Analytics:</strong> Enable real-time insights and anomaly detection across distributed systems.</li>
+            <li><strong>Data Security:</strong> Store sensitive datasets securely with advanced encryption methods.</li>
+            <li><strong>Collaboration:</strong> Provide remote access for stakeholders through centralized dashboards.</li>
+        </ul>
+    </div>
+
+    <!-- Services and Technologies Section -->
+    <div class="section">
+        <h2>Services and Technologies Used</h2>
+
+        <h3>Cloud-Based Services</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>AWS EC2 / GCP Compute Engine</td>
+                    <td>High-performance virtual machines for running ML models.</td>
+                </tr>
+                <tr>
+                    <td>AWS S3 / GCP Cloud Storage</td>
+                    <td>Secure storage for large datasets and logs.</td>
+                </tr>
+                <tr>
+                    <td>AWS Lambda / GCP Cloud Functions</td>
+                    <td>Serverless functions for real-time data processing.</td>
+                </tr>
+                <tr>
+                    <td>AWS CloudWatch</td>
+                    <td>Monitoring application performance and infrastructure.</td>
+                </tr>
+                <tr>
+                    <td>GCP AI Platform</td>
+                    <td>Training and deploying ML models at scale.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Core Technologies</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Technology</th>
+                    <th>Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Flask</td>
+                    <td>Backend API and web application framework.</td>
+                </tr>
+                <tr>
+                    <td>Plotly & Plotly Express</td>
+                    <td>Interactive 2D and 3D data visualizations.</td>
+                </tr>
+                <tr>
+                    <td>Pandas & NumPy</td>
+                    <td>Data preprocessing and manipulation.</td>
+                </tr>
+                <tr>
+                    <td>Scikit-Learn</td>
+                    <td>Machine learning models (Isolation Forest, Random Forest).</td>
+                </tr>
+                <tr>
+                    <td>PennyLane</td>
+                    <td>Quantum feature mapping and visualization.</td>
+                </tr>
+                <tr>
+                    <td>PyCryptodome</td>
+                    <td>RSA encryption for secure communication.</td>
+                </tr>
+                <tr>
+                    <td>NetworkX</td>
+                    <td>Graph-based network visualizations.</td>
+                </tr>
+                <tr>
+                    <td>SQLite</td>
+                    <td>Lightweight database for storing user credentials.</td>
+                </tr>
+                <tr>
+                    <td>Bootstrap</td>
+                    <td>Responsive frontend design.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
+

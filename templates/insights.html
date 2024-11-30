@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insights</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #eaf6ff; /* Light blue background */
+            color: #333;
+        }
+        h1, h2, h3 {
+            font-weight: 600;
+            color: #0056b3; /* Darker blue for headings */
+        }
+        .alert {
+            background-color: #f8d7da;
+            color: #842029;
+            border-color: #f5c2c7;
+            font-weight: 600;
+        }
+        .btn-danger {
+            background-color: #ff5a5a;
+            border-color: #ff5a5a;
+        }
+        .table {
+            background-color: #ffffff;
+        }
+        .graph-container {
+            margin: 20px 0;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .modal-header {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .modal-body {
+            background-color: #f9f9f9;
+        }
+        .btn-close {
+            background-color: #fff;
+        }
+        .container {
+            padding: 20px;
+        }
+        .btn-reduction {
+            background-color: #5bc0de;
+            color: #fff;
+            border-radius: 30px;
+            font-weight: 600;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-reduction:hover {
+            background-color: #31b0d5;
+            color: #fff;
+        }
+        .btn-reduction i {
+            margin-right: 8px;
+        }
+        .modal-header {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .modal-body {
+            background-color: #f9f9f9;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">AI Insights Dashboard</h1>
+
+        <!-- Top Alert Banner -->
+        {% if alerts %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>⚠️ Alerts Detected:</strong> Potential issues require attention.
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#alertModal">
+                    View Alerts
+                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <audio id="alertSound" src="{{ url_for('static', filename='alert.mp3') }}" autoplay></audio>
+            </div>
+        {% endif %}
+
+        <!-- Display Anomalies in Table -->
+        <h2>Anomalies Detected</h2>
+        {% if insights.anomalies %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="table-primary">
+                            {% for key in insights.anomalies[0].keys() %}
+                                <th>{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for anomaly in insights.anomalies %}
+                            <tr>
+                                {% for value in anomaly.values() %}
+                                    <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No anomalies detected.</p>
+        {% endif %}
+
+        <div id="alertTableContainer" style="display: none;">
+            <div class="section">
+                <h2>Threat Alerts</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Threat Score</th>
+                                <th>Reduced Score</th>
+                                <th>Reduction Action</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for anomaly in insights.anomalies %}
+                            <tr>
+                                <td>{{ anomaly.threat_score }}</td>
+                                <td>{{ anomaly.reduced_threat_score }}</td>
+                                <td>{{ anomaly.reduction_action }}</td>
+                                <td>{{ anomaly }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Display Graphs in Grid Layout -->
+        <h2>AI-Trained Graphs</h2>
+        <div class="row">
+            {% for graph, name in zip(ai_graphs, ['Anomaly Detection', 'Feature Importance', 'KMeans Clustering', 'Trend Line', '3D Anomaly Visualization', 'Quantum Threat Detection', 'DDoS Detection', 'Intrusion Detection System (IDS)', 'Threat Intelligence Analysis', 'Time-Series Threat Score','Trend Analysis','Threat Categories','Threat Score', 'Threat Detection and Reduction Trend' ]) %}
+                <div class="col-md-6">
+                    <div class="graph-container">
+                        <h3>{{ name }}</h3>
+                        {{ graph|safe }}
+                    </div>
+                </div>
+                {% if loop.index % 2 == 0 %}
+                    </div><div class="row">
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Modal for Alerts -->
+        {% if alerts %}
+            <div>
+                <!-- Modal -->
+                <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="alertModalLabel">Alerts</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Alert</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for alert in alerts %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ alert }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+     <!-- Reduction Mechanisms Button -->
+     <button class="btn btn-reduction" data-bs-toggle="modal" data-bs-target="#reductionModal">
+        <i class="bi bi-shield-lock"></i> View Reduction Mechanisms
+    </button>
+
+   
+
+    <script>
+        // Play alert sound if there are alerts
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertSound = document.getElementById('alertSound');
+            if (alertSound) {
+                alertSound.play();
+            }
+        });
+    </script>
+</body>
+</html><!-- Modal for Reduction Mechanisms -->
+<div class="modal fade" id="reductionModal" tabindex="-1" aria-labelledby="reductionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reductionModalLabel">Reduction Mechanisms</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">Here are the suggested reduction mechanisms to mitigate threats:</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>#</th>
+                                <th>Mechanism</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mechanism in reduction_mechanisms %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ mechanism.mechanism }}</td>
+                                    <td>{{ mechanism.description }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

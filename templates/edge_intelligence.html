@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edge Intelligence Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div>
+        <h1>Edge Intelligence Dashboard</h1>
+        <button onclick="triggerOrchestrate()">Run Edge Orchestration</button>
+        <button onclick="triggerThreatDetection()">Run Threat Detection</button>
+    </div>
+
+    <script>
+        function triggerOrchestrate() {
+            fetch('/orchestrate')
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Error:', error));
+        }
+
+        function triggerThreatDetection() {
+            let dataPath = prompt("Enter the dataset path for threat detection:");
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `data_path=${dataPath}`
+            })
+            .then(response => response.json())
+            .then(data => alert(JSON.stringify(data)))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
+

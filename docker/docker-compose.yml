@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  ai_threat_detection:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ai_threat_detection_container
+    volumes:
+      - ../data:/app/data
+      - ../models:/app/models
+    restart: always
+
+  flask_app:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - ai_threat_detection
+      - edge_security
+      - satellite_security
+
+  edge_security:
+    # Define edge_security service here
+    # ...
+
+  satellite_security:
+    # Define satellite_security service here
+    # ...
+

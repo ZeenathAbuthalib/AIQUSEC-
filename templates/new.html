@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Computing Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f7fafc;
+            color: #333;
+        }
+
+        h1, h2, h3, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background: linear-gradient(180deg, #007bff, #0056b3);
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #f7fafc;
+            font-size: 1rem;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Header Styling */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #007bff;
+        }
+
+        .header .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* Content Sections */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .section p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Quantum Symbol Grid */
+        .symbol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .symbol-card {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .symbol-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .symbol-card i {
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        .symbol-card h3 {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        /* Chart Section */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card {
+            padding: 15px;
+            background: #f7f9fc;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Quantum Dashboard</h2>
+            <a href="#overview" class="active"><i class="fas fa-home"></i> Overview</a>
+            <a href="#analytics"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="#services"><i class="fas fa-cogs"></i> Services</a>
+            <a href="#contact"><i class="fas fa-info-circle"></i> About</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Welcome to Quantum Dashboard</h1>
+                <div class="profile">
+                    <span>Hello, User</span>
+                    <img src="https://via.placeholder.com/40" alt="Profile">
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview" class="section">
+                <h2>Quantum Overview</h2>
+                <p>Explore real-time quantum analytics, insights, and performance metrics to unlock the future of computing.</p>
+                <div class="symbol-grid">
+                    <div class="symbol-card">
+                        <i class="fas fa-atom"></i>
+                        <h3>Quantum Entanglement</h3>
+                    </div>
+                    <div class="symbol-card">
+                        <i class="fas fa-network-wired"></i>
+                        <h3>Quantum Networks</h3>
+                    </div>
+                    <div class="symbol-card">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Quantum Algorithms</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics" class="section">
+                <h2>Quantum Analytics</h2>
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <canvas id="chart1"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <canvas id="chart2"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <canvas id="chart3"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart JS -->
+    <script>
+        function generateRandomData(length, max) {
+            return Array.from({ length }, () => Math.floor(Math.random() * max));
+        }
+
+        // Chart 1
+        new Chart(document.getElementById('chart1').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: 'Quantum Gates Efficiency',
+                    data: generateRandomData(4, 100),
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    fill: true
+                }]
+            }
+        });
+
+        // Chart 2
+        new Chart(document.getElementById('chart2').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Noise Reduction', 'Error Margin'],
+                datasets: [{
+                    data: [70, 30],
+                    backgroundColor: ['#42a5f5', '#f7b731']
+                }]
+            }
+        });
+
+        // Chart 3
+        new Chart(document.getElementById('chart3').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Algorithm A', 'Algorithm B', 'Algorithm C'],
+                datasets: [{
+                    label: 'Processing Time (ms)',
+                    data: generateRandomData(3, 200),
+                    backgroundColor: ['#42a5f5', '#7cb342', '#ffa726']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
+
+

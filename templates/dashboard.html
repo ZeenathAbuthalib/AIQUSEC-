@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Satellite Launch Tracking Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .dashboard-card {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-4">Satellite Launch Tracking Dashboard</h1>
+        <div class="row">
+            <!-- Launch Vehicle -->
+            <div class="col-md-3 dashboard-card">
+                <h4>Launch Vehicle</h4>
+                <p id="launch-vehicle">Loading...</p>
+            </div>
+            <!-- Satellite Location -->
+            <div class="col-md-5 dashboard-card">
+                <h4>Satellite Trajectory/Location</h4>
+                <p id="satellite-location">Loading...</p>
+            </div>
+            <!-- Countdown -->
+            <div class="col-md-4 dashboard-card">
+                <h4>Mission Countdown</h4>
+                <p id="countdown">Loading...</p>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Sensor Details -->
+            <div class="col-md-6 dashboard-card">
+                <h4>Sensor Details</h4>
+                <p id="sensor-details">Loading...</p>
+            </div>
+            <!-- Sensor Graph -->
+            <div class="col-md-6 dashboard-card">
+                <h4>Sensor Graphs</h4>
+                <div id="sensor-graph"></div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Ground Station -->
+            <div class="col-md-12 dashboard-card">
+                <h4>Ground Station Gateway</h4>
+                <p id="ground-station">Loading...</p>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Fetch data from API
+        fetch('/api/satellite_data', {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('launch-vehicle').innerText = "Falcon Heavy";
+            document.getElementById('satellite-location').innerText = `Lat: ${data[0]['Location (Latitude)']}, Long: ${data[0]['Location (Longitude)']}`;
+            document.getElementById('countdown').innerText = "5:55:25";
+        })
+        .catch(error => console.error("Error loading data:", error));
+    </script>
+</body>
+</html>

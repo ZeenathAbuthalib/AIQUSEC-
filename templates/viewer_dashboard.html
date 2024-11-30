@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIQUSEC Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f0f8ff;
+            color: #333;
+        }
+
+        h2, h3, p {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Layout Structure */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .sidebar {
+            background: #87CEFA;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1rem;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: #5ca6ba;
+            color: #fff;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .header {
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .header .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* Section Styling */
+        .section {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        /* Services Section */
+        .services-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .service-card p {
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .service-card a {
+            text-decoration: none;
+            color: #fff;
+            background: #007bff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .service-card a:hover {
+            background: #0056b3;
+        }
+
+        /* Chart Section */
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card {
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>AIQUSEC</h2>
+            <a href="#overview" class="active"><i class="fas fa-home"></i> Overview</a>
+            <a href="#services"><i class="fas fa-cogs"></i> Services</a>
+            <a href="#alerts"><i class="fas fa-bell"></i> Alerts</a>
+            <a href="#analytics"><i class="fas fa-chart-bar"></i> Analytics</a>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Dashboard</h1>
+                <div class="profile">
+                    <span>Hello, User</span>
+                    
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview" class="section">
+                <h2>Welcome to AIQUSEC</h2>
+                <p>Secure the future with AI-based quantum-safe cybersecurity for edge networks.</p>
+            </div>
+
+            <!-- Alerts Section -->
+<div id="alerts" class="section">
+    <h2>Alerts</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <!-- Update Alert -->
+        <div style="background: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center;">
+            <strong>Update:</strong>
+            <p>Satellite analysis improved!</p>
+        </div>
+
+        <!-- Critical Alert -->
+        <div style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center;">
+            <strong>Alert:</strong>
+            <p>Anomaly detected in traffic!</p>
+        </div>
+
+        <!-- News Alert -->
+        <div style="background: #d1ecf1; color: #0c5460; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center;">
+            <strong>News:</strong>
+            <p>Orbit mission completed.</p>
+        </div>
+    </div>
+</div>
+
+
+            <!-- Services Section -->
+            <div id="services" class="section">
+                <h2>Our Services</h2>
+                <div class="services-section">
+                    <div class="service-card">
+                        <i class="fas fa-satellite-dish"></i>
+                        <h3>Satellite Monitoring</h3>
+                        <p>View and analyze satellite data with filters and insights.</p>
+                        <a href="{{ url_for('satellite_dashboard') }}">Explore Dashboard</a>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-upload"></i>
+                        <h3>Upload CSV for Insights</h3>
+                        <p>Upload a CSV file to analyze real-time insights and quantum-trained graphs.</p>
+                        <a href="{{ url_for('upload_file') }}">Upload CSV</a>
+                    </div>
+                    
+                    
+                    <div class="service-card">
+                        <i class="fas fa-brain"></i>
+                        <h3>AI Insights</h3>
+                        <p>Get AI-driven insights on satellite performance.</p>
+                        <a href="{{ url_for('ai_insights') }}">View AI Insights</a>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-atom"></i>
+                        <h3>Quantum Visualization</h3>
+                        <p>Can Explore Quantum trained real-time data.</p>
+                        <a href="{{ url_for('quantum_visualization') }}">View Quantum Visual</a>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>3D Visualization</h3>
+                        <p>Experience 3D visualizations of satellite operations.</p>
+                        <a href="{{ url_for('visualization') }}">View Visualization</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-Time Analytics Section -->
+            <div id="analytics" class="section">
+                <h2>Real-Time Analytics</h2>
+                <div class="chart-container">
+                    <div class="chart-card"><canvas id="chart1"></canvas></div>
+                    <div class="chart-card"><canvas id="chart2"></canvas></div>
+                    <div class="chart-card"><canvas id="chart3"></canvas></div>
+                    <div class="chart-card"><canvas id="chart4"></canvas></div>
+                    <div class="chart-card"><canvas id="chart5"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Charts -->
+    <script>
+        function generateRandomData(size, max) {
+            return Array.from({ length: size }, () => Math.floor(Math.random() * max));
+        }
+
+        // Chart 1: Line Chart
+        new Chart(document.getElementById('chart1').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'CPU Usage (%)',
+                    data: generateRandomData(5, 100),
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    fill: true
+                }]
+            }
+        });
+
+        // Chart 2: Doughnut Chart
+        new Chart(document.getElementById('chart2').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Used', 'Free'],
+                datasets: [{
+                    data: [70, 30],
+                    backgroundColor: ['#007bff', '#d1ecf1']
+                }]
+            }
+        });
+
+        // Chart 3: Bar Chart
+        new Chart(document.getElementById('chart3').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Download', 'Upload'],
+                datasets: [{
+                    label: 'Traffic (Mbps)',
+                    data: generateRandomData(2, 1000),
+                    backgroundColor: ['#007bff', '#f39c12']
+                }]
+            }
+        });
+
+        // Chart 4: Radar Chart
+        new Chart(document.getElementById('chart4').getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: ['CPU', 'Memory', 'Network', 'Disk', 'Processes'],
+                datasets: [{
+                    label: 'Anomaly Levels',
+                    data: generateRandomData(5, 100),
+                    borderColor: '#17a2b8',
+                    backgroundColor: 'rgba(23, 162, 184, 0.2)'
+                }]
+            }
+        });
+
+        // Chart 5: Polar Area Chart
+        new Chart(document.getElementById('chart5').getContext('2d'), {
+            type: 'polarArea',
+            data: {
+                labels: ['Server A', 'Server B', 'Server C'],
+                datasets: [{
+                    data: generateRandomData(3, 200),
+                    backgroundColor: ['#dc3545', '#007bff', '#ffc107']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
+

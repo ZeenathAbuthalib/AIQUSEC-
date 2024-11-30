@@ -1,0 +1,34 @@
+body {
+    background-color: #0d0d0d;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+h1, h2 {
+    color: #ff004c;  /* Neon red for titles */
+    text-transform: uppercase;
+}
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    padding: 20px;
+}
+
+.chart-container {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #00ccff;  /* Cyan shadow for a glow effect */
+}
+
+.chart-title {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: #00ccff;  /* Neon cyan */
+}
+
+.map-container, .network-graph-container {
+    grid-column: span 2;
+}

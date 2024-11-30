@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Satellite Visualization</title>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.104/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <style>
+        #cesiumContainer {
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+    <script>
+        // Set the Cesium access token
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5ZDdmZmMzNy00YjZkLTRkZDAtOTM2MC04ZWNhMTMzNmIwMDEiLCJpZCI6MjU0OTkyLCJpYXQiOjE3MzE1MDA2Mzl9.4NORPB5SWqsrG9ad3OYI87viwP0nsFKlpqWmjADZdVo';
+
+    
+        // Initialize Cesium viewer with terrain provider
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider: Cesium.createWorldTerrain()
+        });
+    
+        // Load satellite positions dynamically from Flask API endpoint
+        fetch('/api/satellite_positions')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error("API Error:", data.error);
+                    return;
+                }
+    
+                console.log("Satellite Data Loaded:", data);
+    
+                // Add satellites to the map
+                data.forEach(satellite => {
+                    viewer.entities.add({
+                        name: satellite['Satellite ID'],
+                        position: Cesium.Cartesian3.fromDegrees(
+                            satellite['Location (Longitude))'],  // Longitude
+                            satellite['Location (Latitude)'],   // Latitude
+                            500000  // Default altitude in meters (adjust if necessary)
+                        ),
+                        point: {
+                            pixelSize: 10,
+                            color: Cesium.Color.RED,
+                        },
+                        label: {
+                            text: satellite['Satellite ID'],
+                            font: '14pt sans-serif',
+                            fillColor: Cesium.Color.YELLOW,
+                            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                            outlineWidth: 2,
+                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                        }
+                    });
+                });
+    
+                // Fly the camera to the first satellite's position
+                if (data.length > 0) {
+                    const firstSatellite = data[0];
+                    viewer.camera.flyTo({
+                        destination: Cesium.Cartesian3.fromDegrees(
+                            firstSatellite['Location (Longitude))'],  // Longitude
+                            firstSatellite['Location (Latitude)'],   // Latitude
+                            500000  // Default altitude in meters
+                        ),
+                        duration: 2
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading satellite data:', error));
+    </script>
+    
+  
+</body>
+</html>
+
+

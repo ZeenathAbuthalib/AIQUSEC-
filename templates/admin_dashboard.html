@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fc;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .chart-container {
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .chart-card {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .btn-danger {
+            background-color: #ff4757;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #e84141;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fc;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border: none;
+            font-weight: 500;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: scale(1.05);
+        }
+
+        .chart-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-title i {
+            font-size: 20px;
+            color: #3498db;
+            margin-right: 8px;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h2>Admin Dashboard</h2>
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </div>
+
+        <!-- User Table -->
+        <div class="table-container">
+            <h4>User List</h4>
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.role }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        
+
+
+        <!-- Charts Section -->
+        <div class="chart-container">
+            <!-- Chart 1 -->
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="bi bi-pie-chart"></i> User Roles Distribution
+                </div>
+                <canvas id="roleChart"></canvas>
+            </div>
+
+            <!-- Chart 2 -->
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="bi bi-activity"></i> Monthly User Activity
+                </div>
+                <canvas id="activityChart"></canvas>
+            </div>
+
+            <!-- Chart 3 -->
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="bi bi-person-plus"></i> User Registration Trends
+                </div>
+                <canvas id="registrationChart"></canvas>
+            </div>
+
+            <!-- Chart 4 -->
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="bi bi-person-check"></i> User Login Trends
+                </div>
+                <canvas id="loginChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js configuration
+        const roleCtx = document.getElementById('roleChart').getContext('2d');
+        const activityCtx = document.getElementById('activityChart').getContext('2d');
+        const registrationCtx = document.getElementById('registrationChart').getContext('2d');
+        const loginCtx = document.getElementById('loginChart').getContext('2d');
+
+        // Gradient for charts
+        const gradient = roleCtx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(106, 17, 203, 0.8)');
+        gradient.addColorStop(1, 'rgba(66, 212, 245, 0.5)');
+
+        // Chart 1: User Roles
+        new Chart(roleCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Admin', 'Viewer'],
+                datasets: [{
+                    data: [15, 85], // Example data
+                    backgroundColor: ['#6a11cb', '#42d4f5'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                animation: {
+                    animateScale: true
+                }
+            }
+        });
+
+        // Chart 2: Monthly Activity
+        new Chart(activityCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Activity',
+                    data: [20, 30, 50, 40, 60, 70, 80, 90, 60, 50, 40, 30],
+                    borderColor: '#6a11cb',
+                    backgroundColor: gradient,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    duration: 1500
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Chart 3: User Registration
+        new Chart(registrationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'New Users',
+                    data: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 20, 10],
+                    backgroundColor: '#42d4f5'
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    duration: 1000
+                }
+            }
+        });
+
+        // Chart 4: User Logins
+        new Chart(loginCtx, {
+            type: 'polarArea',
+            data: {
+                labels: ['Admin Logins', 'Viewer Logins'],
+                datasets: [{
+                    data: [40, 60],
+                    backgroundColor: ['#6a11cb', '#42d4f5']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

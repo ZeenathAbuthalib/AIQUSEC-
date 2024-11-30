@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite Launch Tracking and Communication Security Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='satellite_dashboard.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #121212;
+            font-family: 'Lexend Deca', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Lexend Deca', sans-serif;
+            color: #121212;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        h3 {
+            font-family: 'Lexend Deca', sans-serif;
+            color: #00bfa5;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-gap: 20px;
+            padding: 40px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .panel {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transform: scale(0.95);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: scale(1);
+            box-shadow: 0 12px 40px rgba(0, 191, 165, 0.4);
+        }
+
+        .icon {
+            font-size: 40px;
+            color: #00bfa5;
+            margin-bottom: 15px;
+            animation: rotateIcon 2s infinite;
+        }
+
+        .network-graph-container {
+            grid-column: span 12;
+        }
+
+        button {
+            background-color: #00e5ff;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Lexend Deca', sans-serif;
+        }
+
+        button:hover {
+            background-color: #ff4081;
+        }
+        .map-container {
+            grid-column: span 12;
+        }
+
+        #map {
+            height: 300px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Satellite Launch Tracking and Communication Security Dashboard</h1>
+
+
+    <div class="dashboard-container">
+
+        <div class="panel" style="grid-column: span 6;">
+            <h3>Launch Satellite</h3>
+            <div class="panel-content">
+                <!-- Image Section -->
+                <div class="image-section" style="margin-bottom: 20px;">
+                    <img src="{{ url_for('static', filename='satellite-and-planet.jpg') }}" alt="Falcon Heavy" style="width: 40%; height: 40%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+                </div>
+                <!-- Description Section -->
+                <div class="description-section">
+                    <div class="description-section" style="margin-top: 10px;">
+                        <p><b>Name: 68151-3083 | Mission Type: Communication</b></p>
+                        <p><b>Orbit Type:</b> Sun-synchronous orbit (SSO)</p>
+                        <p><b>Launch Date:</b> January 25, 2021</p>
+                        <p><b>Frequency Band:</b> UHF</p>
+                        <p><b>Satellite ID:</b> 59886-320</p>
+                        <p><b>Location:</b> Latitude 49.3932119, Longitude 15.8838159</p>
+                        <p><b>Uptime:</b> 79%</p>
+                        <p><b>Security Protocols:</b> AES, IPsec</p>
+                        <p><b>Transmission Reliability:</b> 98%</p>
+                        <p><b>Last Status Update:</b> September 9, 2022</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel" style="grid-column: span 6;">
+            <h3>Why Qubits?</h3>
+            <div style="background: transparent" id="qubit_transmission_chart">{{ qubit_transmission_chart|safe }}</div><p style="text-align: justify;">
+            Qubits are crucial for satellite transmission in quantum communication systems because they represent quantum bits of information, 
+                enabling secure data exchange. By leveraging quantum entanglement, qubits ensure that transmitted information is nearly impossible 
+                to intercept without detection, providing enhanced encryption and data integrity. This makes satellite communications more resilient
+                to eavesdropping, thus securing sensitive information and expanding the capabilities of global data transmission through quantum technology</p>
+        </div>
+    
+    <!-- Second Row: Satellite Trajectory -->
+    <div class="panel" style="grid-column: span 12;">
+        <h3>Satellite Trajectory/Location (3D)</h3>
+        <div id="trajectory_chart" style="background: transparent">{{ map_chart_3d|safe }}</div>
+        <div class="panel-content">
+            <p>Lat: {{ trajectory_info.latitude }}</p>
+            <p>Long: {{ trajectory_info.longitude }}</p>
+            <p>Altitude: {{ trajectory_info.altitude }} m</p>
+            <p>Velocity: {{ trajectory_info.velocity }} km/h</p>
+        </div>
+    </div>
+
+    <!-- Remaining Rows: Two Columns Per Row -->
+        <div class="panel" style="grid-column: span 6;">
+            <div class="icon">⏰</div>
+            <h3>Mission Clock/Countdown</h3>
+            <div class="panel-content">
+                <div class="countdown">{{ mission_info.countdown }}</div>
+                <p>Distance: {{ mission_info.distance }} km</p>
+                <p>Current Speed: {{ mission_info.current_speed }} km/h</p>
+                <p>Next Transmission: {{ mission_info.next_transmission }}</p>
+            </div>
+        </div>
+
+        <div class="panel" style="grid-column: span 6;">
+            <div class="icon">🌡️</div>
+            <h3>Sensor Detail</h3>
+            <p><div id="temperature_gauge" style="background: transparent">Temperature: {{ sensor_data.temperature }}°C</div></p>
+
+            <p><div id="power_gauge" style="background: transparent">Power: {{ sensor_data.power }}%</div></p>
+            <p><div id="radiation_level" style="background: transparent; margin-top: 10px;">Radiation Level: {{ sensor_data.radiation_level }} </div></p>
+            <p><div id="solar_intensity" style="background: transparent; margin-top: 10px;">Solar Intensity: {{ sensor_data.solar_intensity }} </div></p>
+        </div>
+
+        <div class="panel" style="grid-column: span 6;">
+            <div class="icon">⚠️</div>
+            <h3>Error Rate</h3>
+            <div id="error_rate_chart" style="background: transparent">{{ error_rate_chart|safe }}</div>
+            <p><strong>Current Error Rate:</strong> 0.03%</p>
+            <p><strong>Peak Error Rate:</strong> 0.07% (recorded on 10/12/2022)</p>
+            <p><strong>Average Error Rate:</strong> 0.02%</p>
+            <p><strong>Minimum Error Rate:</strong> 0.01% (achieved during optimal solar conditions)</p>
+            <p><strong>Last 24-hour Error Rate:</strong> 0.04%</p>
+            <p><strong>Error Rate During Storm:</strong> 0.09% (due to increased radiation)</p>
+            <p><strong>Threshold Limit:</strong> 0.10% (alert triggered if exceeded)</p>
+        </div>
+        
+        <div class="panel" style="grid-column: span 6;">
+            <div class="icon">📊</div>
+            <h3>Time-Series Analysis</h3>
+            <div style="background: transparent" id="bubble_chart">{{ bubble_chart|safe }}</div>
+        </div>
+
+          <!-- Count of Satellites by Orbit Type & Data Transmission Over Time Chart -->
+<div class="panel" style="grid-column: span 6;">
+    <h3>Count of Satellites by Orbit Type Chart</h3>
+    <div style="background: transparent" id="orbit_type_chart">{{ bar_chart|safe }}</div>
+</div>
+<div class="panel" style="grid-column: span 6;">
+    <h3>Distribution of Qubits Transmitted</h3>
+    <div style="background: transparent" id="qubit_histogram_chart">{{ qubit_histogram_chart|safe }}</div>
+</div>
+<div class="panel" style="grid-column: span 6;">
+    <h3>Data Transmission Over Time Chart</h3>
+    <div style="background: transparent" id="data_transmission_chart">{{ line_chart|safe }}</div>
+</div>
+
+<!-- Heatmap for Satellite Data Transmission & Satellite Uptime vs. Downtime Chart -->
+<div class="panel" style="grid-column: span 6;">
+    <h3>Heatmap for Satellite Data Transmission</h3>
+    <div style="background: transparent" id="data_heatmap">{{ heatmap|safe }}</div>
+</div>
+<div class="panel" style="grid-column: span 6;">
+    <h3>Satellite Uptime vs. Downtime Chart</h3>
+    <div style="background: transparent" id="uptime_downtime_chart">{{ uptime_downtime_chart|safe }}</div>
+</div>
+
+<!-- Latency Analysis Histogram & Satellite Velocity Over Time Chart -->
+<div class="panel" style="grid-column: span 6;">
+    <h3>Latency Analysis Histogram</h3>
+    <div style="background: transparent" id="latency_histogram">{{ latency_histogram|safe }}</div>
+</div>
+<div class="panel" style="grid-column: span 6;">
+    <h3>Satellite Velocity Over Time Chart</h3>
+    <div style="background: transparent" id="velocity_chart">{{ velocity_chart|safe }}</div>
+</div>
+
+<!-- 3D Scatter Plot for Geographical Distribution & Bubble Chart for Time-Series Analysis -->
+<div class="panel" style="grid-column: span 6;">
+    <h3>3D Scatter Plot of Satellite Geographical Distribution</h3>
+    <div style="background: transparent" id="scatter_3d">{{ scatter_3d|safe }}</div>
+</div>
+<div class="panel" style="grid-column: span 6;">
+    <div class="video-section video-section-container">
+        <h3>Mission Video</h3>
+        <video autoplay muted controls loop style="width: 100%; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+            <source src="{{ url_for('static', filename='video@720p.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- Description for the video -->
+        <p style="margin-top: 15px; text-align: justify;">
+            Satellite communication is vital for global connectivity, enabling remote communication, internet access, broadcasting, and navigation services. 
+            It supports disaster management, defense, and scientific exploration by providing reliable communication 
+            links where terrestrial infrastructure is unavailable or impractical, ensuring data transmission across vast distances.
+        </p>
+    </div>
+</div>
+
+
+<!-- Network Graph: Ground Stations and Satellites & Power Consumption Analysis for Satellites -->
+<div class="panel" style="grid-column: span 6;">
+    <h3>Network Graph: Ground Stations and Satellites</h3>
+    <div style="background: transparent" id="network_graph">{{ network_graph|safe }}</div>
+</div>
+<div class="panel" style="grid-column: span 6;">
+    <h3>Power Consumption Analysis for Satellites</h3>
+    <div style="background: transparent" id="power_consumption_chart">{{ power_consumption_chart|safe }}</div>
+</div>
+<div class="panel" style="grid-column: span 6;">
+    <h3>Qubit Transmission vs. Error Rate</h3>
+    <div style="background: transparent" id="qubit_vs_error_chart">{{ qubit_vs_error_chart|safe }}</div>
+</div>
+3
+    </div>
+</body>
+
+</html>
+    <!-- JavaScript to handle real-time clock and animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Example countdown timer
+            function startCountdown(duration) {
+                let timer = duration, hours, minutes, seconds;
+                setInterval(function () {
+                    hours = parseInt(timer / 3600, 10);
+                    minutes = parseInt((timer % 3600) / 60, 10);
+                    seconds = parseInt(timer % 60, 10);
+
+                    hours = hours < 10 ? "0" + hours : hours;
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    document.querySelector('.countdown').textContent = hours + ":" + minutes + ":" + seconds;
+
+                    if (--timer < 0) {
+                        timer = duration;
+                    }
+                }, 1000);
+            }
+
+            startCountdown(21325);  // Initialize with arbitrary countdown value
+
+        });
+
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('map').setView([51.505, -0.09], 2); // Change the coordinates and zoom level as needed
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Add a marker or any other layers as needed
+            L.marker([51.505, -0.09]).addTo(map)
+                .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+                .openPopup();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('map').setView([51.505, -0.09], 2);
+
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}', {
+                attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            }).addTo(map);
+
+            L.marker([51.505, -0.09]).addTo(map)
+                .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+                .openPopup();
+        });
+    </script>
+    </script>
+</body>
+
+</html>

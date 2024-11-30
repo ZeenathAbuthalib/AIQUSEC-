@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cybersecurity Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: linear-gradient(135deg, #eceaef, #07b2e6);
+            color: black;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: black;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .card h2 {
+            color: black;
+            margin-bottom: 15px;
+        }
+
+        .icon {
+            font-size: 1.5em;
+            color: black;
+        }
+
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        #cyberThreatMap {
+            height: 400px;
+            width: 100%;
+        }
+
+        #servicesChart, #applicationHealthChart, #userExperienceChart {
+            height: 300px;
+            width: 100%;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            
+        }
+
+        .chart-container {
+            margin: 20px 0;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two equal-width columns */
+            gap: 60px; /* Space between columns */
+            padding: 20px;
+        }
+
+        .chart {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .video-container {
+            margin: 40px 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+       
+
+    .card p {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.6;
+        background: rgba(255, 255, 255, 0.1); /* Subtle highlight background */
+        padding: 15px;
+        border-radius: 10px;
+        text-align: justify;
+    }
+    .card ul {
+        margin: 10px 0 0 20px;
+        font-size: 18px;
+        line-height: 1.8;
+        list-style-type: disc;
+    }
+
+    .card ul li {
+        margin: 8px 0;
+    }
+    
+
+    </style>
+</head>
+
+<body>
+    <h1> Data Trained Artificial Intelligence Dashboard </h1>
+    <div class="dashboard">
+
+        <!-- Quick Overview Card -->
+        
+<div class="card">
+    <h2><i class="fas fa-chart-pie icon"></i> Quick Overview</h2>
+    <p>
+        <span>Advanced AI-Powered System</span> seamlessly integrates <span>Quantum Computing</span>, 
+        <span>Machine Learning</span>, and <span>Cybersecurity Insights</span> to detect anomalies, predict trends, 
+        and ensure <span>real-time threat monitoring</span> with interactive visualizations.
+    </p>
+    
+</div>
+
+<div class="card">
+    <h2><i class="fas fa-cloud icon"></i> Need for Cloud Infrastructure</h2>
+    <p><span>Cloud infrastructure is essential to:</span></p>
+    <ul>
+        <li><span>Scale:</span> Handle high volumes of real-time data (e.g., network traffic, satellite telemetry).</li>
+        <li><span>Compute Power:</span> Execute ML and quantum models requiring high-performance GPUs/TPUs.</li>
+        <li><span>Real-Time Analytics:</span> Enable real-time insights and anomaly detection across distributed systems.</li>
+        <li><span>Data Security:</span> Store sensitive datasets securely with advanced encryption methods.</li>
+        <li><span>Collaboration:</span> Provide remote access for stakeholders through centralized dashboards.</li>
+    </ul>
+</div>
+        <!-- Application Health Card -->
+        <div class="card">
+            <h2><i class="fas fa-heartbeat icon"></i> Application Health</h2>
+            <div id="applicationHealthChart"></div>
+        </div>
+
+        <!-- User Experience Card -->
+        <div class="card">
+            <h2><i class="fas fa-globe icon"></i> User Experience</h2>
+            <div id="userExperienceChart"></div>
+        </div>
+
+        <!-- Services Card -->
+        <div class="card">
+            <h2><i class="fas fa-server icon"></i> Services</h2>
+            <div id="servicesChart"></div>
+        </div>
+
+        <!-- Database Card -->
+        <div class="card">
+            <h2><i class="fas fa-database icon"></i> Databases</h2>
+            <p>Database: Easytravelbusiness (Derby Client)</p>
+            <p>Transactions: 112/min, 845/min Statements</p>
+            <p>1 ms Response Time</p>
+        </div>
+
+        
+
+        
+    </div>
+
+    <script>
+        // Example placeholder for charts, replace with actual data
+
+        // Application Health Chart (Placeholder)
+        Plotly.newPlot('applicationHealthChart', [{
+            x: ['Web', 'Messaging', 'Custom'],
+            y: [104, 22, 6],
+            type: 'bar',
+            marker: { color: 'black' }
+        }], {
+            title: 'Application Health',
+            plot_bgcolor: "white",
+            paper_bgcolor: "white",
+            font: {
+                color: "#0ea9a4"
+            }
+        });
+
+        // User Experience Chart (Placeholder)
+        Plotly.newPlot('userExperienceChart', [{
+            type: 'choropleth',
+            locationmode: 'country names',
+            locations: ['Germany', 'United States', 'Russia', 'China'],
+            z: [1, 0.5, 0.7, 0.3],
+            colorscale: [
+                [0, 'rgb(0, 48, 143)'],
+                [1, 'rgb(0, 255, 255)']
+            ]
+        }], {
+            title: 'User Experience Across the Globe',
+            plot_bgcolor: "#1e40af",
+            paper_bgcolor: "#1e40af",
+            font: {
+                color: "#e0e7ff"
+            }
+        });
+
+        
+
+    </script>
+
+<div class="video-container">
+    <h2>Understanding AI-Enhanced Insights</h2>
+    <iframe width="100%" height="400" src="https://www.youtube.com/embed/your_video_id_here" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <p>
+        Watch this video to understand how AI is utilized in detecting anomalies, predicting power consumption, and enhancing cybersecurity analysis.
+    </p>
+</div>
+
+    <!-- Row containing two graphs in one row with two columns -->
+    <div class="row">
+        <!-- Temperature Anomaly Detection -->
+        <div class="chart">
+            <h2>Temperature Anomaly Detection</h2>
+            <div id="anomalyScatterChart">
+                {{ anomaly_scatter_html|safe }}
+            </div>
+        </div>
+
+        <!-- Power Consumption Trend Section -->
+        <div class="chart">
+            <h2>Power Consumption Trend with Future Prediction</h2>
+            <div id="powerTrendChart">
+                {{ power_trend_html|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+        <!-- First Row: Radiation Levels and Network Traffic -->
+        <div class="row">
+            <!-- Enhanced Radiation Levels Over Time -->
+            <div class="chart">
+                <h2>Radiation Levels Over Time (With Mean & Std Dev)</h2>
+                <div id="radiationLineChart">
+                    {{ radiation_line_chart_html|safe }}
+                </div>
+            </div>
+
+            <!-- Network Traffic Anomaly Detection -->
+            <div class="chart">
+                <h2>Network Traffic Anomaly Detection</h2>
+                <div id="networkTrafficAnomalyChart">
+                    {{ network_traffic_anomaly_html|safe }}
+                </div>
+            </div>
+        </div>
+<hr>
+        <!-- Second Row: Malware Behavior and Power Consumption -->
+        <div class="row">
+            <!-- Malware Behavior Analysis Section -->
+            <div class="chart">
+                <h2>Malware Behavior Analysis</h2>
+                <div id="malwareHeatmapChart">
+                    {{ malware_heatmap_html|safe }}
+                </div>
+            </div>
+
+            <!-- Power Consumption Trend Section -->
+            <div class="chart">
+                <h2>Power Consumption Trend</h2>
+                <div id="powerConsumptionChart">
+                    {{ power_consumption_chart_html|safe }}
+                </div>
+                <div class="details-content">
+                    Monitoring power consumption is critical to ensure the satellite operates efficiently.
+                    AI algorithms predict power trends and detect anomalies, helping reduce unexpected power failures.
+                </div>
+            </div>
+        </div>
+       
+
+<!-- First Row: DDOS and IDS Map -->
+<div class="row">
+    <!-- DDOS Section -->
+    <div class="chart">
+        <h2>DDOS</h2>
+        <div id="DDOSChart">
+            {{ ddos_scatter_html | safe }}
+        </div>
+    </div>
+
+    <!-- IDS Map Section -->
+    <div class="chart">
+        <h2>IDS Map</h2>
+        <div id="IDSChart">
+            {{ ids_heatmap_html | safe }}
+        </div>
+    </div>
+</div>
+
+<!-- Second Row: Threat Clustering and Intelligence Feed Analysis -->
+<div class="row">
+    <!-- Threat Clustering Section -->
+    <div class="chart">
+        <h2>Threat Clustering</h2>
+        <div id="clusterChart">
+            {{ threat_behavior_html | safe }}
+        </div>
+    </div>
+
+    <!-- Threat Intelligence Feed Analysis Section -->
+    <div class="chart">
+        <h2>Threat Intelligence Feed Analysis</h2>
+        <div id="threat_feed_analysis">
+            {{ threat_analysis_html | safe }}
+        </div>
+    </div>
+</div>
+</div>
+    
+         <!-- First Row: External IP Reputation Scores and MITRE ATT&CK Mapping -->
+         <div class="row">
+            <!-- External IP Reputation Scores -->
+            <div class="chart">
+                <h2>External IP Reputation Scores</h2>
+                <div id="reputation_scores">
+                    {{ reputation_scores_html | safe }}
+                </div>
+            </div>
+
+            <!-- MITRE ATT&CK Framework Mapping -->
+            <div class="chart">
+                <h2>MITRE ATT&CK Framework Mapping</h2>
+                <div id="mitre_attack_mapping">
+                    {{ mitre_attack_html | safe }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row: Firewall Log Analysis and DNS Query Monitoring -->
+        <div class="row">
+            <!-- Firewall Log Analysis -->
+            <div class="chart">
+                <h2>Firewall Log Analysis</h2>
+                <div id="firewall-chart">
+                    {{ firewall_html | safe }}
+                </div>
+            </div>
+
+            <!-- DNS Query Monitoring -->
+            <div class="chart">
+                <h2>DNS Query Monitoring</h2>
+                <div id="dns-chart">
+                    {{ dns_html | safe }}
+                </div>
+            </div>
+        </div>
+
+    
+         <!-- First Row: SIEM Alert Correlation and External IP Reputation Scores -->
+         <div class="row">
+            <!-- SIEM Alert Correlation Analysis -->
+            <div class="chart">
+                <h2>SIEM Alert Correlation Analysis</h2>
+                <div id="siem-chart">
+                    {{ siem_html | safe }}
+                </div>
+            </div>
+
+               <!-- Video Container for Additional Explanation -->
+        <div class="video-container">
+            <h2>Understanding AI-Enhanced Insights</h2>
+            <iframe width="100%" height="400" src="https://www.youtube.com/embed/your_video_id_here" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <p>
+                Watch this video to understand how AI is utilized in detecting anomalies, predicting power consumption, and enhancing cybersecurity analysis.
+            </p>
+        </div>
+
+        
+
+        <div class="chart">
+            <h2>Feature Importance from Random Forest Regressor</h2>
+            <div id="featureImportanceChart">
+                {{ feature_importance_chart|safe }}
+            </div>
+        </div>
+    
+        <!-- Quantum Feature Mapping Visualization -->
+        <div class="chart">
+            <h2>Quantum Feature Mapping Visualization</h2>
+            <div id="quantumFeatureChart">
+                {{ quantum_feature_chart|safe }}
+            </div>
+        </div>
+
+        <div class="chart">
+            <h2>Quantum Feature Importance Analysis</h2>
+            <div id="quantumFeatureImportanceChart">
+                {{ quantum_feature_importance_chart|safe }}
+            </div>
+        </div>
+    
+        <!-- Threat Time-Series Analysis Chart -->
+        <div class="chart">
+            <h2>Time-Series Analysis of Threat Score</h2>
+            <div id="threatTimeSeriesChart">
+                {{ threat_time_series_chart|safe }}
+            </div>
+        </div>
+
+         <!-- Quantum-Based Anomaly Detection Chart -->
+    <div class="chart">
+        <h2>Quantum-Based Anomaly Detection</h2>
+        <div id="anomalyDetectionChart">
+            {{ anomaly_detection_chart|safe }}
+        </div>
+    </div>
+
+    <!-- Quantum Correlation Heatmap -->
+    <div class="chart">
+        <h2>Quantum Correlation Heatmap</h2>
+        <div id="quantumCorrelationChart">
+            {{ quantum_correlation_chart|safe }}
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>
+
+
